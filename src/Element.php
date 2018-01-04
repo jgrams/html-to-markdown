@@ -254,4 +254,20 @@ class Element implements ElementInterface
 
         return $element === $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSurroundedByText()
+    {
+        $final_character_previous_node = substr($this->node->previousSibling->textContent, -1);
+        $first_character_next_node = substr($this->node->nextSibling->textContent, 0, 1);
+        if (preg_match('/[a-zA-Z0-9]/', $final_character_previous_node) &&
+            preg_match('/[a-zA-Z0-9]/', $first_character_next_node)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -278,4 +278,9 @@ class HtmlConverterTest extends \PHPUnit_Framework_TestCase
         $result = $markdown->convert($htmlH4);
         $this->assertEquals($htmlH4, $result);
     }
+
+    public function test_in_word_emphasis_uses_stars()
+    {
+        $this->html_gives_markdown("<p>Did you check use the Test<em>Case</em>s?</p>", "Did you check use the Test*Case*s?");
+    }
 }
