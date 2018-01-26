@@ -35,17 +35,20 @@ class EmphasisConverter implements ConverterInterface, ConfigurationAwareInterfa
             return '';
         }
 
+        $used_emphasis_option = array();
+        $enforced_intraword_options = array('italic_style' => '*', 'bold_style' => '**');
+
         if ($tag === 'i' || $tag === 'em') {
-            if ($element->isSurroundedByText()) {
-                $style = "*";
-            } else {
-                $style = $this->config->getOption('italic_style');
-            }
+            $used_emphasis_option['italic_style'] = $this->config->getOption('italic_style');
         } else {
-            $style = $this->config->getOption('bold_style');
+            $used_emphasis_option['bold_style'] = $this->config->getOption('bold_style');
         }
 
+        if (!array_intersect_assoc($used_emphasis_option, $enforced_intraword_options) && $element->isEmphasisInsideWord()) {
+            array_replace($used_emphasis_option, $enforced_intraword_options);
+        }
 
+        $style = array_shift($used_emphasis_option);
         $prefix = ltrim($value) !== $value ? ' ' : '';
         $suffix = rtrim($value) !== $value ? ' ' : '';
 
