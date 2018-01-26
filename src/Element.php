@@ -260,72 +260,36 @@ class Element implements ElementInterface
      */
     public function isEmphasInsideWord()
     {
-        if ($this->hasBothSiblings()) {
-            if (
-                $this->previousNodeEndsWithAlphanumeric() && $this->nextNodeStartsWithAlphanumeric() ||
-                $this->previousNodeEndsWithAlphanumeric() && $this->nextNodeStartsWithPunctuation() ||
-                $this->previousNodeEndsWithPunctuation() && $this->nextNodeStartsWithAlphanumeric()
-            ) {
-                return true;
-            }
-        } elseif ($this->hasOneSibling()) {
-            if (
-                $this->hasSiblingBefore() &&
-                $this->previousNodeEndsWithAlphanumeric()
-            ) {
-               return true;
-            } elseif (
-                $this->hasSiblingAfter() &&
-                $this->nextNodeStartsWithAlphanumeric()
-            ) {
-                return true;
-            }
+
+        if ($this->hasPreviousSibling() && $this->previousNodeEndsWithAlphanumeric()) {
+            return true;
+        } elseif ($this->hasNextSibling() && $this->nextNodeStartsWithAlphanumeric()) {
+            return true;
         }
         return false;
     }
 
-    private function hasBothSiblings()
-    {
-        return $this->hasSiblingBefore() && $this->hasSiblingAfter();
-    }
-
-    private function hasSiblingBefore()
+    private function hasPreviousSibling()
     {
         return $this->node->previousSibling;
     }
 
-    private function hasSiblingAfter()
+    private function hasNextSibling()
     {
         return $this->node->nextSibling;
     }
 
     private function previousNodeEndsWithAlphanumeric()
     {
-        $final_character_previous_node = substr($this->node->previousSibling->textContent, -1);
+        $final_character_previous_node = substr($this->hasPreviousSibling()->textContent, -1);
+        echo $final_character_previous_node . "!!!";
         return preg_match('/[a-zA-Z0-9]/', $final_character_previous_node);
-    }
-
-    private function previousNodeEndsWithPunctuation()
-    {
-        $final_character_previous_node = substr($this->node->previousSibling->textContent, -1);
-        return preg_match('/[[:punct:]]/', $final_character_previous_node);
     }
 
     private function nextNodeStartsWithAlphanumeric()
     {
-        $first_character_next_node = substr($this->node->nextSibling->textContent, 0, 1);
+        $first_character_next_node = substr($this->hasNextSibling()->textContent, 0, 1);
+        echo $first_character_next_node . "xxx";
         return preg_match('/[a-zA-Z0-9]/', $first_character_next_node);
     }
-
-    private function nextNodeStartsWithPunctuation()
-    {
-        $first_character_next_node = substr($this->node->nextSibling->textContent, 0, 1);
-        return preg_match('/[[:punct:]]/', $first_character_next_node);
-    }
-
-    private function hasOneSibling()
-    {
-        return $this->node->previousSibling || $this->node->nextSibling;
-    }
-
 }

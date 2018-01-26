@@ -45,7 +45,7 @@ class EmphasisConverter implements ConverterInterface, ConfigurationAwareInterfa
         }
 
         if (!array_intersect_assoc($used_emphasis_option, $enforced_intraword_options) && $element->isEmphasInsideWord()) {
-            array_replace($used_emphasis_option, $enforced_intraword_options);
+            $used_emphasis_option = array_intersect_key($enforced_intraword_options, $used_emphasis_option);
         }
 
         $style = array_shift($used_emphasis_option);
