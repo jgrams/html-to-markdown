@@ -279,38 +279,15 @@ class HtmlConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($htmlH4, $result);
     }
 
-    public function test_in_word_emphasis_uses_stars_when_flanked_by_letters()
+    public function test_in_word_emphasis_uses_stars()
     {
-        $this->html_gives_markdown("<p>Did you check use the Test<em>Case</em>s?</p>", "Did you check use the Test*Case*s?");
-    }
-
-    public function test_in_word_emphasis_uses_stars_when_preceeded_by_letters_and_followed_by_punctuation()
-    {
-        $this->html_gives_markdown("<p>Did you check use the Test<em>Case</em>?</p>", "Did you check use the Test*Case*?");
-    }
-
-    public function test_in_word_emphasis_uses_stars_when_followed_by_letters_and_preceded_by_punctuation()
-    {
-        $this->html_gives_markdown("<p>Did you check use the '<em>Case</em>s?'</p>", "Did you check use the '*Case*s?'");
-    }
-
-    public function test_in_word_emphasis_uses_default_when_flanked_by_spaces()
-    {
-        $this->html_gives_markdown("<p>Did you check use the <em>Case</em> here?</p>", "Did you check use the _Case_ here?");
-    }
-
-    public function test_in_word_emphasis_uses_default_when_flanked_by_punctuation()
-    {
-        $this->html_gives_markdown("<p>Did you check use the '<em>Case</em>' here?</p>", "Did you check use the '_Case_' here?");
-    }
-
-    public function test_in_word_emphasis_uses_stars_when_followed_by_letters_and_has_no_preceding_nodes()
-    {
-        $this->html_gives_markdown("<p><em>Case</em>s here?</p>", "*Case*s here?");
-    }
-
-    public function test_in_word_emphasis_uses_stars_when_has_no_follower_and_preceded_by_letter()
-    {
-        $this->html_gives_markdown("<p>Did you check the Test<em>Case</em></p>", "Did you check the Test*Case*");
+        $html_options = array('italic_style' => '_', 'bold_style' => '__');
+        $this->html_gives_markdown("<p>Did you check use the Test<em>Case</em>s?</p>", "Did you check use the Test*Case*s?", $html_options);
+        $this->html_gives_markdown("<p>Did you check use the Test<strong>Case</strong>?</p>", "Did you check use the Test**Case**?", $html_options);
+        $this->html_gives_markdown("<p>Did you check use the '<em>Case</em>s?'</p>", "Did you check use the '*Case*s?'", $html_options);
+        $this->html_gives_markdown("<p>Did you check use the <em>Case</em> here?</p>", "Did you check use the _Case_ here?", $html_options);
+        $this->html_gives_markdown("<p>Did you check use the '<strong>Case</strong> here'?</p>", "Did you check use the '_Case_ here'?", $html_options);
+        $this->html_gives_markdown("<p><em>Case</em>s here?</p>", "*Case*s here?", $html_options);
+        $this->html_gives_markdown("<p>Did you check the Test<em>Case</em></p>", "Did you check the Test*Case*", $html_options);
     }
 }
