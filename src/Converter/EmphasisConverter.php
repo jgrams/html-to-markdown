@@ -44,7 +44,7 @@ class EmphasisConverter implements ConverterInterface, ConfigurationAwareInterfa
             $used_emphasis_option['bold_style'] = $this->config->getOption('bold_style');
         }
 
-        if (!array_intersect_assoc($used_emphasis_option, $enforced_intraword_options) && $element->isEmphasisInsideWord()) {
+        if (!array_intersect_assoc($used_emphasis_option, $enforced_intraword_options) && $element->isEmphasInsideWord()) {
             array_replace($used_emphasis_option, $enforced_intraword_options);
         }
 

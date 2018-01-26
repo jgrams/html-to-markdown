@@ -258,7 +258,7 @@ class Element implements ElementInterface
     /**
      * @return bool
      */
-    public function isEmphasisInsideWord()
+    public function isEmphasInsideWord()
     {
         if ($this->hasBothSiblings()) {
             if (
