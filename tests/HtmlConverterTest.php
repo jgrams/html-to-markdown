@@ -287,7 +287,8 @@ class HtmlConverterTest extends \PHPUnit_Framework_TestCase
         $this->html_gives_markdown("<p>Did you check use the '<em>Case</em>s?'</p>", "Did you check use the '*Case*s?'", $html_options);
         $this->html_gives_markdown("<p>Did you check use the <em>Case</em> here?</p>", "Did you check use the _Case_ here?", $html_options);
         $this->html_gives_markdown("<p>Did you check use the '<strong>Case</strong> here'?</p>", "Did you check use the '_Case_ here'?", $html_options);
+        $this->html_gives_markdown("<p>Such '<strong>Cases</strong>' are rare.</p>", "Such '__Cases__ are rare.", $html_options);
         $this->html_gives_markdown("<p><em>Case</em>s here?</p>", "*Case*s here?", $html_options);
-        $this->html_gives_markdown("<p>Did you check the Test<em>Case</em></p>", "Did you check the Test*Case*", $html_options);
+        $this->html_gives_markdown("<p>Did you check the Space<em>Case </em></p>", "Did you check the Space*Case* ", $html_options);
     }
 }
