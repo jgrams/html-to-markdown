@@ -125,27 +125,6 @@ class Element implements ElementInterface
     }
 
     /**
-     * @param \DomNode $node
-     * @param bool $checkChildren
-     *
-     * @return \DomNode|null
-     */
-    private function getNextNode($node, $checkChildren = true)
-    {
-        if ($checkChildren && $node->firstChild) {
-            return $node->firstChild;
-        }
-
-        if ($node->nextSibling) {
-            return $node->nextSibling;
-        }
-
-        if ($node->parentNode) {
-            return $this->getNextNode($node->parentNode, false);
-        }
-    }
-
-    /**
      * @param string[]|string $tagNames
      *
      * @return bool
@@ -260,36 +239,73 @@ class Element implements ElementInterface
      */
     public function isEmphasInsideWord()
     {
-
-        if ($this->hasPreviousSibling() && $this->previousNodeEndsWithAlphanumeric()) {
+        if ($this->currentNodeStartsWithAlphanumeric() && $this->previousNodeEndsWithAlphanumeric()) {
+            echo $this->currentNodeStartsWithAlphanumeric();
+            echo $this->previousNodeEndsWithAlphanumeric();
             return true;
-        } elseif ($this->hasNextSibling() && $this->nextNodeStartsWithAlphanumeric()) {
+        } elseif ($this->currentNodeEndsWithAlphanumeric() && $this->nextNodeStartsWithAlphanumeric()) {
             return true;
         }
         return false;
     }
 
-    private function hasPreviousSibling()
-    {
-        return $this->node->previousSibling;
-    }
-
-    private function hasNextSibling()
-    {
-        return $this->node->nextSibling;
-    }
-
+    /**
+     * @return bool
+     */
     private function previousNodeEndsWithAlphanumeric()
     {
-        $final_character_previous_node = substr($this->hasPreviousSibling()->textContent, -1);
-        echo $final_character_previous_node . "!!!";
-        return preg_match('/[a-zA-Z0-9]/', $final_character_previous_node);
+        echo $this->node->previousSibling;
+        if ($this->node->previousSibling) {
+            $final_character_previous_node = substr($this->node->previousSibling->nodeValue, -1);
+            echo 'Ends: \n';
+            echo $next_node->nodeValue;
+            echo $this->node->previousSibling->textContent;
+            echo $final_character_previous_node;
+            return $this->checkTextForAlphanumeric($final_character_previous_node);
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * @return bool
+     */
     private function nextNodeStartsWithAlphanumeric()
     {
-        $first_character_next_node = substr($this->hasNextSibling()->textContent, 0, 1);
-        echo $first_character_next_node . "xxx";
-        return preg_match('/[a-zA-Z0-9]/', $first_character_next_node);
+        $next_node = $this->getNext($this->node);
+        echo $next_node;
+        if ($next_node) {
+            echo 'Starts: \n';
+            echo $next_node->nodeValue;
+            $first_character_next_node = substr($next_node->nodeValue, 0, 1);
+            return $this->checkTextForAlphanumeric($first_character_next_node);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function currentNodeStartsWithAlphanumeric()
+    {
+        return $this->checkTextForAlphanumeric(substr($this->getValue(), 0, 1));
+    }
+
+    /**
+     * @return bool
+     */
+    private function currentNodeEndsWithAlphanumeric()
+    {
+        return $this->checkTextForAlphanumeric(substr($this->getValue(), -1));
+    }
+
+    /**
+     * @param $string
+     * @return bool
+     */
+    private function checkTextForAlphanumeric($string)
+    {
+        return preg_match('/[a-zA-Z0-9]/', $string);
     }
 }
